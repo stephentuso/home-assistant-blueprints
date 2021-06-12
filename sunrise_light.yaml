@@ -1,4 +1,3 @@
-  
 blueprint:
   name: Sunrise Light
   description: Gradually turns up the brightness of lights until it reaches 100% at the input time specified
