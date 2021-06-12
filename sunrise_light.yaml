@@ -1,0 +1,130 @@
+  
+blueprint:
+  name: Sunrise Light
+  description: Gradually turns up the brightness of lights until it reaches 100% at the input time specified
+  domain: automation
+  input:
+    light_target:
+      name: Light
+      selector:
+        target:
+          entity:
+            domain: light
+    time_entity:
+      name: Time Entity
+      description: input_datetime
+      selector:
+        entity:
+          domain: input_datetime
+    switch_entity:
+      name: Switch Entity
+      description: Switch to determine if automation should run (input_boolean or other switch)
+      selector:
+        entity:
+    duration:
+      name: Duration
+      description: How long the automation should last/how long before the set time to start
+      default: 30
+      selector:
+        number:
+          min: 0
+          max: 60
+          unit_of_measurement: minutes
+
+mode: single
+
+variables:
+  duration: !input duration
+trigger:
+- platform: template
+  value_template: '{% set alarmTime = strptime(states(''input_datetime.morning_alarm_time''), ''%H:%M:%S'') %}
+    {% set hours = alarmTime.hour %}
+    {% set minutes = alarmTime.minute %}
+    {% set delta = 30 %}
+    {% set start = hours * 60 + minutes - delta %}
+    {{ states(''sensor.time'') == (start * 60) | timestamp_custom(''%H:%M'', false) }}'
+condition:
+  - condition: state
+    entity_id: input_boolean.morning_alarm
+    state: 'on'
+action:
+  - service: light.turn_on
+    target: !input light_target
+    data:
+  kelvin: 2000
+  brightness_pct: 1
+  - delay:
+      minutes: 5
+  - condition: state
+    entity_id: !input switch_entity
+    state: 'on'
+  - service: light.turn_on
+    target: !input light_target
+    data:
+  kelvin: 2000
+  brightness_pct: 5
+  - delay:
+      minutes: 5
+  - condition: state
+    entity_id: !input switch_entity
+    state: 'on'
+  - service: light.turn_on
+    target: !input light_target
+    data:
+  kelvin: 2250
+  brightness_pct: 10
+  - delay:
+      minutes: 5
+  - condition: state
+    entity_id: !input switch_entity
+    state: 'on'
+  - service: light.turn_on
+    target: !input light_target
+    data:
+  kelvin: 2400
+  brightness_pct: 15
+  - delay:
+      minutes: 5
+  - condition: state
+    entity_id: !input switch_entity
+    state: 'on'
+  - service: light.turn_on
+    target: !input light_target
+    data:
+  kelvin: 2500
+  brightness_pct: 25
+  - delay:
+      minutes: 5
+  - condition: state
+    entity_id: !input switch_entity
+    state: 'on'
+  - service: light.turn_on
+    target: !input light_target
+    data:
+  kelvin: 2800
+  brightness_pct: 50
+  - delay:
+      minutes: 5
+  - condition: state
+    entity_id: !input switch_entity
+    state: 'on'
+  - service: light.turn_on
+    target: !input light_target
+    data:
+  kelvin: 3000
+  brightness_pct: 75
+  - delay:
+      minutes: 5
+  - condition: state
+    entity_id: !input switch_entity
+    state: 'on'
+  - service: light.turn_on
+    target: !input light_target
+    data:
+  kelvin: 3200
+  brightness_pct: 100
+  - delay:
+      minutes: 5
+  - condition: state
+    entity_id: !input switch_entity
+    state: 'on'
