@@ -51,8 +51,8 @@ action:
   - service: light.turn_on
     target: !input light_target
     data:
-  kelvin: 2000
-  brightness_pct: 1
+      kelvin: 2000
+      brightness_pct: 1
   - delay:
       minutes: 5
   - condition: state
@@ -61,8 +61,8 @@ action:
   - service: light.turn_on
     target: !input light_target
     data:
-  kelvin: 2000
-  brightness_pct: 5
+      kelvin: 2000
+      brightness_pct: 5
   - delay:
       minutes: 5
   - condition: state
@@ -71,8 +71,8 @@ action:
   - service: light.turn_on
     target: !input light_target
     data:
-  kelvin: 2250
-  brightness_pct: 10
+      kelvin: 2250
+      brightness_pct: 10
   - delay:
       minutes: 5
   - condition: state
@@ -81,8 +81,8 @@ action:
   - service: light.turn_on
     target: !input light_target
     data:
-  kelvin: 2400
-  brightness_pct: 15
+      kelvin: 2400
+      brightness_pct: 15
   - delay:
       minutes: 5
   - condition: state
@@ -91,8 +91,8 @@ action:
   - service: light.turn_on
     target: !input light_target
     data:
-  kelvin: 2500
-  brightness_pct: 25
+      kelvin: 2500
+      brightness_pct: 25
   - delay:
       minutes: 5
   - condition: state
@@ -101,8 +101,8 @@ action:
   - service: light.turn_on
     target: !input light_target
     data:
-  kelvin: 2800
-  brightness_pct: 50
+      kelvin: 2800
+      brightness_pct: 50
   - delay:
       minutes: 5
   - condition: state
@@ -111,8 +111,8 @@ action:
   - service: light.turn_on
     target: !input light_target
     data:
-  kelvin: 3000
-  brightness_pct: 75
+      kelvin: 3000
+      brightness_pct: 75
   - delay:
       minutes: 5
   - condition: state
@@ -121,8 +121,8 @@ action:
   - service: light.turn_on
     target: !input light_target
     data:
-  kelvin: 3200
-  brightness_pct: 100
+      kelvin: 3200
+      brightness_pct: 100
   - delay:
       minutes: 5
   - condition: state
