@@ -21,20 +21,9 @@ blueprint:
       description: Switch to determine if automation should run (input_boolean or other switch)
       selector:
         entity:
-    duration:
-      name: Duration
-      description: How long the automation should last/how long before the set time to start
-      default: 30
-      selector:
-        number:
-          min: 0
-          max: 60
-          unit_of_measurement: minutes
 
 mode: single
 
-variables:
-  duration: !input duration
 trigger:
 - platform: template
   value_template: '{% set alarmTime = strptime(states(''input_datetime.morning_alarm_time''), ''%H:%M:%S'') %}
