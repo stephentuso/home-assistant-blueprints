@@ -19,6 +19,10 @@ blueprint:
       name: Condition Template
       selector:
         text:
+    mid_condition_template:
+      name: Mid Condition Template
+      selector:
+        text:
     no_motion_wait:
       name: Wait time
       description: Time to leave the light on after last motion is detected.
@@ -58,9 +62,7 @@ action:
       from: "on"
       to: "off"
   - delay: !input no_motion_wait
-  - condition: state
-    entity_id: !input switch_entity
-    state: 'on'
+  - condition: !input mid_condition_template
   - service: light.turn_off
     target: !input light_target
   - delay: !input second_off_delay
