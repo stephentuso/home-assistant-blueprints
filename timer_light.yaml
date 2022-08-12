@@ -1,0 +1,50 @@
+blueprint:
+  name: Timer Light
+  description: Turn on a light at a specific time for the duration of a timer
+  domain: automation
+  input:
+    light_target:
+      name: Light
+      selector:
+        target:
+          entity:
+            domain: light
+    time_entity:
+      name: Time Entity
+      description: Time to turn on light
+      selector:
+        entity:
+          domain: input_datetime
+    timer_entity:
+      name: Timer Entity
+      description: Timer helper
+      selector:
+        entity:
+          domain: timer
+
+mode: single
+
+trigger:
+  - platform: time
+    at: !input time_entity
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: !input timer_entity
+ 
+action:
+  - service: >
+      {% if trigger.platform == 'time' %}
+        light.turn_on
+      {% else %}
+        light.turn_off
+      {% endif %}
+    target:
+      entity_id: !input light_target
+  - conditions: "{{ trigger.platform == 'time' }}"
+  - service: timer.start
+    target:
+      entity_id: !input timer_entity
+
+
+
