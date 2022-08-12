@@ -1,0 +1,25 @@
+blueprint:
+  name: Switch Light
+  description: Make light match state of switch/sensor (states must match "off" and "on")
+  domain: automation
+  input:
+    switch_entity:
+      name: Switch
+      selector:
+        entity:
+    light_target:
+      name: Light
+      selector:
+        target:
+          entity:
+            domain: light
+
+mode: single
+
+trigger:
+  - platform: state
+    entity_id: !input switch_entity
+
+action:
+  - service: "{{ iif(trigger.to_state == 'on', 'light.turn_on', 'light.turn_off') }}"
+    target: !input light_target

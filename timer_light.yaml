@@ -39,8 +39,7 @@ action:
       {% else %}
         light.turn_off
       {% endif %}
-    target:
-      entity_id: !input light_target
+    target: !input light_target
   - conditions: "{{ trigger.platform == 'time' }}"
   - service: timer.start
     target:
