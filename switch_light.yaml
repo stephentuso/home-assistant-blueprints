@@ -21,5 +21,5 @@ trigger:
     entity_id: !input switch_entity
 
 action:
-  - service: "{{ iif(trigger.to_state == 'on', 'light.turn_on', 'light.turn_off') }}"
+  - service: "{{ iif(trigger.to_state.state == 'on', 'light.turn_on', 'light.turn_off') }}"
     target: !input light_target
