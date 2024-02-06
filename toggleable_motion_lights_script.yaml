@@ -49,15 +49,13 @@ trigger:
     to: "on"
 
 trigger:
-  - type: motion
-    platform: device
+  - platform: state
     entity_id: !input motion_entity
-    domain: binary_sensor
+    to: "on"
     id: motion
-  - type: no_motion
-    platform: device
+  - platform: state
     entity_id: !input motion_entity
-    domain: binary_sensor
+    to: "off"
     id: no_motion
     for:
       seconds: !input no_motion_wait
@@ -100,12 +98,11 @@ action:
               - motion_turn_on
         sequence:
           - wait_for_trigger:
-              - type: no_motion
-                platform: device
-                entity_id: !input motion_entity
-                domain: binary_sensor
-                for:
-                  seconds: !input no_motion_wait
+              platform: state
+              entity_id: !input motion_entity
+              to: "off"
+              for:
+                seconds: !input no_motion_wait
           - condition: state
             entity_id: !input switch_entity
             state: "on"
