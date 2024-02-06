@@ -13,21 +13,18 @@ blueprint:
       name: Light
       description: Only used to check if lights are on
       selector:
-        target:
-          entity:
-            domain: light
+        entity:
+          domain: light
     script_on:
       name: Turn on script
       selector:
-        target:
-          entity:
-            domain: script
+        entity:
+          domain: script
     script_off:
       name: Turn off script
       selector:
-        target:
-          entity:
-            domain: script
+        entity:
+          domain: script
     switch_entity:
       name: Motion Switch
       selector:
