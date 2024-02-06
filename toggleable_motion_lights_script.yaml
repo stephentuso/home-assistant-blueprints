@@ -45,12 +45,6 @@ max_exceeded: silent
 trigger:
   - platform: state
     entity_id: !input motion_entity
-    from: "off"
-    to: "on"
-
-trigger:
-  - platform: state
-    entity_id: !input motion_entity
     to: "on"
     id: motion
   - platform: state
