@@ -1,0 +1,117 @@
+blueprint:
+  name: Toggleable Motion Light - Scripts
+  description: Turn on a light when motion is detected, if the specified switch is on. Runs scripts for on/off
+  domain: automation
+  input:
+    motion_entity:
+      name: Motion Sensor
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: motion
+    light_state_target:
+      name: Light
+      description: Only used to check if lights are on
+      selector:
+        target:
+          entity:
+            domain: light
+    script_on:
+      name: Turn on script
+      selector:
+        target:
+          entity:
+            domain: script
+    script_off:
+      name: Turn off script
+      selector:
+        target:
+          entity:
+            domain: script
+    switch_entity:
+      name: Motion Switch
+      selector:
+        entity:
+    no_motion_wait:
+      name: Wait time
+      description: Time to leave the light on after last motion is detected.
+      default: 5
+      selector:
+        number:
+          min: 0
+          max: 1440
+          unit_of_measurement: minutes
+
+mode: restart
+max_exceeded: silent
+
+trigger:
+  - platform: state
+    entity_id: !input motion_entity
+    from: "off"
+    to: "on"
+
+trigger:
+  - type: motion
+    platform: device
+    entity_id: !input motion_entity
+    domain: binary_sensor
+    id: motion
+  - type: no_motion
+    platform: device
+    entity_id: !input motion_entity
+    domain: binary_sensor
+    id: no_motion
+    for:
+      seconds: !input no_motion_wait
+  - platform: state
+    entity_id: !input light_state_target
+    to: "on"
+    id: lights_on
+  - platform: state
+    entity_id: !input switch_entity
+    to: "on"
+    id: motion_turn_on
+
+condition:
+  - condition: state
+    entity_id: !input switch_entity
+    state: 'on'
+
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - motion
+        sequence:
+          - service: !input script_on
+            metadata: {}
+            data: {}
+      - conditions:
+          - condition: trigger
+            id:
+              - no_motion
+        sequence:
+          - service: !input script_off
+            metadata: {}
+            data: {}
+      - conditions:
+          - condition: trigger
+            id:
+              - lights_on
+              - motion_turn_on
+        sequence:
+          - wait_for_trigger:
+              - type: no_motion
+                platform: device
+                entity_id: !input motion_entity
+                domain: binary_sensor
+                for:
+                  seconds: !input no_motion_wait
+          - condition: state
+            entity_id: !input switch_entity
+            state: "on"
+          - service: !input script_off
+            metadata: {}
+            data: {}
