@@ -1,5 +1,5 @@
 blueprint:
-  name: Toggleable Motion Light - Scripts
+  name: Toggleable Motion Light
   description: Turn on a light when motion is detected, if the specified switch is on
   domain: automation
   input:
