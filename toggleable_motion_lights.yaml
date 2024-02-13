@@ -1,6 +1,6 @@
 blueprint:
-  name: Toggleable Motion Light
-  description: Turn on a light when motion is detected, if the specified switch is on. Also calls turn_off twice, I have issues with some groups not completely turning off the first time.
+  name: Toggleable Motion Light - Scripts
+  description: Turn on a light when motion is detected, if the specified switch is on
   domain: automation
   input:
     motion_entity:
@@ -8,13 +8,11 @@ blueprint:
       selector:
         entity:
           domain: binary_sensor
-          device_class: motion
-    light_target:
+    light:
       name: Light
       selector:
-        target:
-          entity:
-            domain: light
+        entity:
+          domain: light
     switch_entity:
       name: Motion Switch
       selector:
@@ -22,21 +20,12 @@ blueprint:
     no_motion_wait:
       name: Wait time
       description: Time to leave the light on after last motion is detected.
-      default: 120
-      selector:
-        number:
-          min: 0
-          max: 3600
-          unit_of_measurement: seconds
-    second_off_delay:
-      name: Delay for off retry
-      description: Time to wait before attempting to turn off lights again
       default: 5
       selector:
         number:
           min: 0
-          max: 30
-          unit_of_measurement: seconds
+          max: 1440
+          unit_of_measurement: minutes
 
 mode: restart
 max_exceeded: silent
@@ -44,28 +33,61 @@ max_exceeded: silent
 trigger:
   - platform: state
     entity_id: !input motion_entity
-    from: "off"
     to: "on"
-    
+    id: motion
+  - platform: state
+    entity_id: !input motion_entity
+    to: "off"
+    id: no_motion
+    for:
+      minutes: !input no_motion_wait
+  - platform: state
+    entity_id: !input light
+    to: "on"
+    id: lights_on
+  - platform: state
+    entity_id: !input switch_entity
+    to: "on"
+    id: motion_turn_on
+
 condition:
   - condition: state
     entity_id: !input switch_entity
     state: 'on'
 
 action:
-  - service: light.turn_on
-    target: !input light_target
-  - wait_for_trigger:
-      platform: state
-      entity_id: !input motion_entity
-      from: "on"
-      to: "off"
-  - delay: !input no_motion_wait
-  - condition: state
-    entity_id: !input switch_entity
-    state: 'on'
-  - service: light.turn_off
-    target: !input light_target
-  - delay: !input second_off_delay
-  - service: light.turn_off
-    target: !input light_target
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - motion
+        sequence:
+          - service: light.turn_on
+            target: 
+              entity_id: !input light
+      - conditions:
+          - condition: trigger
+            id:
+              - no_motion
+        sequence:
+          - service: light.turn_off
+            target:
+              entity_id: !input light
+      - conditions:
+          - condition: trigger
+            id:
+              - lights_on
+              - motion_turn_on
+        sequence:
+          - wait_for_trigger:
+              platform: state
+              entity_id: !input motion_entity
+              to: "off"
+              for:
+                minutes: !input no_motion_wait
+          - condition: state
+            entity_id: !input switch_entity
+            state: "on"
+          - service: light.turn_off
+            target:
+              entity_id: !input light
