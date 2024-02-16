@@ -78,7 +78,7 @@ action:
         sequence:
           - condition: template
             value_template: >-
-              {{ trigger.to_state.attributes.options == trigger.to_state.attributes.options }}
+              {{ trigger.from_state.attributes.options == trigger.to_state.attributes.options }}
           - condition: template
             value_template: >-
               {{ trigger.to_state.state in state_attr(select_entity, 'options') }}
