@@ -52,7 +52,6 @@ action:
               - startup
         sequence:
           - service: input_select.set_options
-            metadata: {}
             data:
               options: >
                 {% set data = state_attr(select_entity, 'options') %} 
@@ -68,7 +67,6 @@ action:
           - condition: template
             value_template: "{{ states(select_entity) != states(helper_entity) }}"
           - service: input_select.select_option
-            metadata: {}
             data:
               option: "{{ trigger.to_state.state }}"
             target:
@@ -80,11 +78,13 @@ action:
         sequence:
           - condition: template
             value_template: >-
-              {{ trigger.to_state.state in state_attr(helper_entity, 'options') }}
+              {{ trigger.to_state.attributes.options == trigger.to_state.attributes.options }}
+          - condition: template
+            value_template: >-
+              {{ trigger.to_state.state in state_attr(select_entity, 'options') }}
           - condition: template
             value_template: "{{ states(select_entity) != states(helper_entity) }}"
           - service: select.select_option
-            metadata: {}
             data:
               option: "{{ trigger.to_state.state }}"
             target:
