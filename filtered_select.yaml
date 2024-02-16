@@ -68,7 +68,7 @@ action:
             value_template: "{{ states(select_entity) != states(helper_entity) }}"
           - service: input_select.select_option
             data:
-              option: "{{ trigger.to_state.state }}"
+              option: "{{ states(select_entity) }}"
             target:
               entity_id: !input helper_entity
       - conditions:
