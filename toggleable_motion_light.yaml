@@ -74,12 +74,6 @@ action:
               - motion_turn_on
         sequence:
           - wait_template: "{{ (states[motion_entity].last_changed | as_timestamp + (int(no_motion_wait) * 60)) < as_timestamp(now()) }}"
-          - wait_for_trigger:
-              platform: state
-              entity_id: !input motion_entity
-              to: "off"
-              for:
-                minutes: !input no_motion_wait
           - condition: state
             entity_id: !input switch_entity
             state: "on"
