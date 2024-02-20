@@ -55,9 +55,6 @@ condition:
     state: 'on'
 
 action:
-  - variables:
-      no_motion_wait: !input no_motion_wait
-      motion_entity: !input motion_entity
   - choose:
       - conditions:
           - condition: trigger
@@ -73,7 +70,8 @@ action:
               - lights_on
               - motion_turn_on
         sequence:
-          - wait_template: "{{ (states[motion_entity].last_changed | as_timestamp + (int(no_motion_wait) * 60)) < as_timestamp(now()) }}"
+          - delay:
+              minutes: !input no_motion_wait
           - condition: state
             entity_id: !input switch_entity
             state: "on"
