@@ -34,7 +34,6 @@ trigger:
   - platform: state
     entity_id: !input motion_entity
     to: "on"
-    id: motion
   - platform: state
     entity_id: !input motion_entity
     to: "off"
@@ -57,14 +56,6 @@ condition:
 
 action:
   - choose:
-      - conditions:
-          - condition: trigger
-            id:
-              - motion
-        sequence:
-          - service: light.turn_on
-            target: 
-              entity_id: !input light
       - conditions:
           - condition: trigger
             id:
@@ -91,3 +82,7 @@ action:
           - service: light.turn_off
             target:
               entity_id: !input light
+    default:
+      - service: light.turn_on
+        target: 
+          entity_id: !input light
