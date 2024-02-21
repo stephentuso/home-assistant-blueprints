@@ -89,7 +89,7 @@ action:
           entity_id: !input light
       # probably not necessary but unsure how to append
       # the input actions to the above list
-      if:
-        - condition: template
-          value_template: "{{ True }}"
-      then: !input extra_on_actions
+      - if:
+          - condition: template
+            value_template: "{{ True }}"
+        then: !input extra_on_actions
