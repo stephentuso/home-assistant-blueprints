@@ -26,6 +26,11 @@ blueprint:
           min: 0
           max: 1440
           unit_of_measurement: minutes
+    extra_on_actions:
+      name: Extra On Actions
+      description: Additional actions to run when motion is detected
+      selector:
+        action:
 
 mode: restart
 max_exceeded: silent
@@ -80,5 +85,11 @@ action:
               entity_id: !input light
     default:
       - service: light.turn_on
-        target: 
+        target:
           entity_id: !input light
+      # probably not necessary but unsure how to append
+      # the input actions to the above list
+      if:
+        - condition: template
+          value_template: "{{ True }}"
+      then: !input extra_on_actions
