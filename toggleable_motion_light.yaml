@@ -29,6 +29,7 @@ blueprint:
     extra_on_actions:
       name: Extra On Actions
       description: Additional actions to run when motion is detected
+      default: []
       selector:
         action:
 
